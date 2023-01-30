@@ -1,3 +1,5 @@
+/* eslint-disable import/no-extraneous-dependencies */
+import 'webcomponent-qr-code';
 import { HomeInventory } from './HomeInventory.js';
 import { ContainerList } from './ContainerList.js';
 import { ContainerContent } from './ContainerContent.js';

@@ -30,6 +30,7 @@ const containersRef = collection(db, 'Containers');
 export class HomeInventory extends LitElement {
   static get properties() {
     return {
+      url: { type: String },
       containers: { type: Array },
       containerID: { type: String },
       container: { type: String },
@@ -87,6 +88,7 @@ export class HomeInventory extends LitElement {
     super();
     this.getURLParams();
     this.title = 'Home Inventory';
+    this.url = window.location.origin;
   }
 
   async _getContainerContent() {
@@ -94,10 +96,8 @@ export class HomeInventory extends LitElement {
     const containerSnap = await getDoc(containerRef);
 
     if (containerSnap.exists()) {
-      console.log('Document data:', containerSnap.data());
       this.title = `Home Inventory - ${containerSnap.data().labelName}`;
       this.container = containerSnap.data();
-      console.log(this.container);
       const contentsQuery = query(
         collection(db, 'Items'),
         where('container', '==', containerRef)
@@ -114,7 +114,6 @@ export class HomeInventory extends LitElement {
         containerContent.push(item);
       });
       this.containerContent = containerContent;
-      console.log(this.containerContent);
     } else {
       // doc.data() will be undefined in this case
       console.log('No such document!');
@@ -122,18 +121,15 @@ export class HomeInventory extends LitElement {
   }
 
   async _getContainers() {
-    console.log('listing Containers');
     const containers = [];
     const querySnapshot = await getDocs(containersRef);
     // eslint-disable-next-line no-shadow
     querySnapshot.forEach(doc => {
       // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, ' => ', doc.data());
       const container = doc.data();
       container.id = doc.id;
       containers.push(container);
     });
-    console.log(containers);
     this.containers = containers;
   }
 
@@ -142,12 +138,18 @@ export class HomeInventory extends LitElement {
     const container = params.get('c');
 
     if (container) {
-      console.log('has a containerID');
       this.containerID = container;
       this._getContainerContent();
     }
 
     this._getContainers();
+  }
+
+  _renderQRCode() {
+    if (this.containerID) {
+      return html`<qr-code data="${this.url}?c=${this.containerID}"></qr-code>`;
+    }
+    return html`<p>Click on a container to view its QR code.</p>`;
   }
 
   render() {
@@ -162,6 +164,8 @@ export class HomeInventory extends LitElement {
           : html`<p>Click on a container to view its contents.</p>`}
 
         <container-list .containers=${this.containers}></container-list>
+
+        ${this._renderQRCode()}
       </main>
     `;
   }
