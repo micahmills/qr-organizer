@@ -23,6 +23,7 @@ export class addItem extends LitElement {
       containerID: { type: String },
       name: { type: String },
       _submitEnabled: { state: true },
+      addVisible: { type: Boolean },
     };
   }
 
@@ -66,6 +67,15 @@ export class addItem extends LitElement {
   }
 
   render() {
+    if (!this.addVisible) {
+      return html`<button
+        @click=${() => {
+          this.addVisible = true;
+        }}
+      >
+        Add Items
+      </button>`;
+    }
     return html` <label
         >New Item Name:
         <input name="name" @input=${this._inputChanged} />
