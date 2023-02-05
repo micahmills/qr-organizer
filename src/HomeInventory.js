@@ -92,7 +92,9 @@ export class HomeInventory extends LitElement {
         this._getContainerContent();
       }
     });
-
+    this.addEventListener('containerAdded', () => {
+      this._getContainers();
+    });
     this.title = 'Home Inventory';
     this.url = window.location.origin;
   }

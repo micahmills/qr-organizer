@@ -1,7 +1,7 @@
 import { LitElement, html, css } from 'lit';
 
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, doc, addDoc } from 'firebase/firestore/lite';
+import { getFirestore, collection, addDoc } from 'firebase/firestore/lite';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyD6xtWsMnxdZjLzlpUW1PVB3lxeDsS915E',
@@ -15,12 +15,11 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const itemsRef = collection(db, 'Items');
+const containersRef = collection(db, 'Containers');
 
-export class addItem extends LitElement {
+export class addContainer extends LitElement {
   static get properties() {
     return {
-      containerID: { type: String },
       name: { type: String },
       _submitEnabled: { state: true },
     };
@@ -45,32 +44,35 @@ export class addItem extends LitElement {
 
   async _submitUpdate() {
     const name = this.renderRoot?.querySelector('input[name="name"]').value;
-    const containerRef = doc(db, 'Containers', this.containerID);
+    const location = this.renderRoot?.querySelector(
+      'input[name="location"]'
+    ).value;
 
-    await addDoc(itemsRef, {
-      name,
-      container: containerRef,
+    const docRef = await addDoc(containersRef, {
+      labelName: name,
+      location,
     });
 
     const options = {
       detail: {
-        container: this.containerID,
+        container: docRef.id,
       },
       bubbles: true,
       composed: true,
     };
-    this.dispatchEvent(new CustomEvent('itemAdded', options));
-    this._submitEnabled = false;
+    this.dispatchEvent(new CustomEvent('containerAdded', options));
   }
 
   render() {
-    return html` <label
-        >New Item Name:
-        <input name="name" @input=${this._inputChanged} />
-        <input name="containerID" .value=${this.containerID} hidden />
-      </label>
-      <button @click=${this._submitUpdate} .disabled=${!this._submitEnabled}>
-        Submit
-      </button>`;
+    return html`
+      <h2>Add Container</h2>
+      <label for="name">Name</label>
+      <input type="text" name="name" @input=${this._inputChanged} />
+      <label for="location">Location</label>
+      <input type="text" name="location" />
+      <button ?disabled=${!this._submitEnabled} @click=${this._submitUpdate}>
+        Add
+      </button>
+    `;
   }
 }

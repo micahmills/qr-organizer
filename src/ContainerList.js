@@ -35,6 +35,8 @@ export class ContainerList extends LitElement {
             </li>`
           )}
         </ul>
+
+        <add-container></add-container>
       `;
     }
     return html`<h2>Loading...</h2>`;
