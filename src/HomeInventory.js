@@ -102,7 +102,16 @@ export class HomeInventory extends LitElement {
         item.id = doc.id;
         containerContent.push(item);
       });
-      this.containerContent = containerContent;
+
+      const collator = new Intl.Collator(undefined, {
+        numeric: true,
+        sensitivity: 'base',
+      });
+      const sorted = containerContent.sort((b, a) =>
+        collator.compare(b.name, a.name)
+      );
+
+      this.containerContent = sorted;
     } else {
       // doc.data() will be undefined in this case
       console.log('No such document!');

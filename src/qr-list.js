@@ -62,20 +62,28 @@ export class QRList extends LitElement {
       containers.push(container);
     });
 
-    containers.sort((a, b) => {
-      const fa = a.labelName.toLowerCase();
-      const fb = b.labelName.toLowerCase();
-
-      if (fa < fb) {
-        return -1;
-      }
-      if (fa > fb) {
-        return 1;
-      }
-      return 0;
+    const collator = new Intl.Collator(undefined, {
+      numeric: true,
+      sensitivity: 'base',
     });
+    const sorted = containers.sort((b, a) =>
+      collator.compare(b.labelName, a.labelName)
+    );
 
-    this.containers = containers;
+    // const sorted = containers.sort((a, b) => {
+    //   const fa = a.labelName.toLowerCase();
+    //   const fb = b.labelName.toLowerCase();
+
+    //   if (fa < fb) {
+    //     return -1;
+    //   }
+    //   if (fa > fb) {
+    //     return 1;
+    //   }
+    //   return 0;
+    // });
+
+    this.containers = sorted;
   }
 
   render() {
