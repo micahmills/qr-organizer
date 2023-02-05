@@ -22,21 +22,26 @@ export class QRList extends LitElement {
   static get properties() {
     return {
       containers: { type: Array },
+      url: { type: String },
     };
   }
 
   static get styles() {
     return css`
-      :host {
+      main {
         font-family: sans-serif;
         display: grid;
         grid-gap: 10px;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       }
       .QR_container {
+        border: 2px dotted black;
         display: flex;
         flex-direction: column;
         align-items: center;
+      }
+      h1 {
+        margin: 0;
       }
     `;
   }
@@ -44,6 +49,7 @@ export class QRList extends LitElement {
   constructor() {
     super();
     this.containers = [];
+    this.url = window.location.origin;
   }
 
   connectedCallback() {
@@ -70,35 +76,24 @@ export class QRList extends LitElement {
       collator.compare(b.labelName, a.labelName)
     );
 
-    // const sorted = containers.sort((a, b) => {
-    //   const fa = a.labelName.toLowerCase();
-    //   const fb = b.labelName.toLowerCase();
-
-    //   if (fa < fb) {
-    //     return -1;
-    //   }
-    //   if (fa > fb) {
-    //     return 1;
-    //   }
-    //   return 0;
-    // });
-
     this.containers = sorted;
   }
 
   render() {
     return html`
-      ${map(
-        this.containers,
-        container => html`
-          <div class="QR_container">
-            <h1>${container.labelName}</h1>
-            <qr-code
-              data="${container.url}?c=${container.containerID}"
-            ></qr-code>
-          </div>
-        `
-      )}
+      <a href="/">Home</a>
+      <main>
+        ${map(
+          this.containers,
+          container =>
+            html`
+              <div class="QR_container">
+                <h1>${container.labelName}</h1>
+                <qr-code data="${this.url}?c=${container.id}"></qr-code>
+              </div>
+            `
+        )}
+      </main>
     `;
   }
 }

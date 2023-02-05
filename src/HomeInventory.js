@@ -170,6 +170,7 @@ export class HomeInventory extends LitElement {
     return html`
       <main>
         <h1>${this.title}</h1>
+        <a href="/print.html">Print Labels</a>
         ${this.containerID
           ? html`<container-content
               container=${ifDefined(JSON.stringify(this.container))}
