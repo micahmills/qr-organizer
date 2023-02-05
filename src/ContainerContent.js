@@ -16,6 +16,12 @@ export class ContainerContent extends LitElement {
         display: flex;
         flex-direction: column;
       }
+
+      h2,
+      h3 {
+        margin: 0.5rem 0;
+      }
+
       ul {
         list-style: none;
       }
@@ -23,22 +29,28 @@ export class ContainerContent extends LitElement {
   }
 
   _renderContainerContent() {
-    console.log(this.containerContent);
-    if (this.containerContent.length > 0) {
-      return html`
-        ${map(this.containerContent, item => html`<li>${item.name}</li>`)}
-      `;
+    if (this.containerContent) {
+      if (this.containerContent.length > 0) {
+        return html`
+          ${map(this.containerContent, item => html`<li>${item.name}</li>`)}
+        `;
+      }
+      return html`<li>No items in this container</li>`;
     }
 
-    return html`<li>No items in this container</li>`;
+    return html`<li>Loading...</li>`;
   }
 
   render() {
-    return html`
-      <h2>${ifDefined(this.container.labelName)} Content</h2>
-      <ul>
-        ${this._renderContainerContent()}
-      </ul>
-    `;
+    if (this.container) {
+      return html`
+        <h2>${ifDefined(this.container.labelName)} Content</h2>
+        <h3>Location: ${ifDefined(this.container.location)}</h3>
+        <ul>
+          ${this._renderContainerContent()}
+        </ul>
+      `;
+    }
+    return html`<h2>Loading...</h2>`;
   }
 }

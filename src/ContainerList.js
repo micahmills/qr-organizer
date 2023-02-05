@@ -24,17 +24,19 @@ export class ContainerList extends LitElement {
   }
 
   render() {
-    console.log(this.containers);
-    return html`
-      <h2>Containers</h2>
-      <ul>
-        ${map(
-          this.containers,
-          container => html`<li>
-            <a href="/?c=${container.id}"> ${container.labelName} </a>
-          </li>`
-        )}
-      </ul>
-    `;
+    if (this.containers) {
+      return html`
+        <h2>Containers</h2>
+        <ul>
+          ${map(
+            this.containers,
+            container => html`<li>
+              <a href="/?c=${container.id}"> ${container.labelName} </a>
+            </li>`
+          )}
+        </ul>
+      `;
+    }
+    return html`<h2>Loading...</h2>`;
   }
 }
