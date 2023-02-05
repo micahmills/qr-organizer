@@ -119,6 +119,20 @@ export class HomeInventory extends LitElement {
       container.id = doc.id;
       containers.push(container);
     });
+
+    containers.sort((a, b) => {
+      const fa = a.labelName.toLowerCase();
+      const fb = b.labelName.toLowerCase();
+
+      if (fa < fb) {
+        return -1;
+      }
+      if (fa > fb) {
+        return 1;
+      }
+      return 0;
+    });
+
     this.containers = containers;
   }
 
@@ -155,7 +169,10 @@ export class HomeInventory extends LitElement {
             ></container-content>`
           : html`<p>Click on a container to view its contents.</p>`}
 
-        <container-list .containers=${this.containers}></container-list>
+        <container-list
+          .containers=${this.containers}
+          ?listVisible=${!this.containerID}
+        ></container-list>
 
         ${this._renderQRCode()}
       </main>

@@ -61,6 +61,20 @@ export class QRList extends LitElement {
       container.id = doc.id;
       containers.push(container);
     });
+
+    containers.sort((a, b) => {
+      const fa = a.labelName.toLowerCase();
+      const fb = b.labelName.toLowerCase();
+
+      if (fa < fb) {
+        return -1;
+      }
+      if (fa > fb) {
+        return 1;
+      }
+      return 0;
+    });
+
     this.containers = containers;
   }
 
