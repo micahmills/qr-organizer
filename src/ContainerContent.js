@@ -6,6 +6,7 @@ export class ContainerContent extends LitElement {
   static get properties() {
     return {
       container: { type: Object },
+      containerID: { type: String },
       containerContent: { type: Array },
     };
   }
@@ -49,6 +50,7 @@ export class ContainerContent extends LitElement {
         <ul>
           ${this._renderContainerContent()}
         </ul>
+        <add-item containerID=${this.containerID}></add-item>
       `;
     }
     return html`<h2>Loading...</h2>`;

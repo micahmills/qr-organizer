@@ -10,7 +10,7 @@ import {
   getDocs,
   query,
   where,
-} from 'firebase/firestore/lite';
+} from 'firebase/firestore';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -87,6 +87,12 @@ export class HomeInventory extends LitElement {
   constructor() {
     super();
     this.getURLParams();
+    this.addEventListener('itemAdded', e => {
+      if (this.containerID === e.detail.container) {
+        this._getContainerContent();
+      }
+    });
+
     this.title = 'Home Inventory';
     this.url = window.location.origin;
   }
@@ -160,6 +166,7 @@ export class HomeInventory extends LitElement {
           ? html`<container-content
               container=${ifDefined(JSON.stringify(this.container))}
               .containerContent=${this.containerContent}
+              containerID=${this.containerID}
             ></container-content>`
           : html`<p>Click on a container to view its contents.</p>`}
 
