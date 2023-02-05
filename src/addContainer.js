@@ -29,6 +29,20 @@ export class addContainer extends LitElement {
     return css`
       :host {
         font-family: sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+      }
+
+      label {
+        margin-top: 1em;
+        font-size: 1.25rem;
+      }
+
+      button {
+        margin: 1em;
+        padding: 1.25em;
       }
     `;
   }
@@ -43,10 +57,12 @@ export class addContainer extends LitElement {
   }
 
   async _submitUpdate() {
-    const name = this.renderRoot?.querySelector('input[name="name"]').value;
-    const location = this.renderRoot?.querySelector(
+    const nameField = this.renderRoot?.querySelector('input[name="name"]');
+    const name = nameField.value.trim();
+    const locationField = this.renderRoot?.querySelector(
       'input[name="location"]'
-    ).value;
+    );
+    const location = locationField.value.trim();
 
     const docRef = await addDoc(containersRef, {
       labelName: name,
@@ -61,11 +77,12 @@ export class addContainer extends LitElement {
       composed: true,
     };
     this.dispatchEvent(new CustomEvent('containerAdded', options));
+    nameField.value = '';
+    locationField.value = '';
   }
 
   render() {
     return html`
-      <h2>Add Container</h2>
       <label for="name">Name</label>
       <input type="text" name="name" @input=${this._inputChanged} />
       <label for="location">Location</label>

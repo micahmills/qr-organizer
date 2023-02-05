@@ -44,7 +44,8 @@ export class addItem extends LitElement {
   }
 
   async _submitUpdate() {
-    const name = this.renderRoot?.querySelector('input[name="name"]').value;
+    const nameField = this.renderRoot?.querySelector('input[name="name"]');
+    const name = nameField.value.trim();
     const containerRef = doc(db, 'Containers', this.containerID);
 
     await addDoc(itemsRef, {
@@ -61,6 +62,7 @@ export class addItem extends LitElement {
     };
     this.dispatchEvent(new CustomEvent('itemAdded', options));
     this._submitEnabled = false;
+    nameField.value = '';
   }
 
   render() {

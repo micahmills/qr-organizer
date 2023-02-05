@@ -16,6 +16,9 @@ export class ContainerContent extends LitElement {
       :host {
         display: flex;
         flex-direction: column;
+        border: 1px solid gray;
+        border-radius: 1rem;
+        padding: 1em;
       }
 
       h2,

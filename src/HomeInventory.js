@@ -59,27 +59,8 @@ export class HomeInventory extends LitElement {
         flex-grow: 1;
       }
 
-      .logo {
-        margin-top: 36px;
-        animation: app-logo-spin infinite 20s linear;
-      }
-
-      @keyframes app-logo-spin {
-        from {
-          transform: rotate(0deg);
-        }
-        to {
-          transform: rotate(360deg);
-        }
-      }
-
-      .app-footer {
-        font-size: calc(12px + 0.5vmin);
-        align-items: center;
-      }
-
-      .app-footer a {
-        margin-left: 5px;
+      .helpText {
+        font-size: 1rem;
       }
     `;
   }
@@ -157,7 +138,9 @@ export class HomeInventory extends LitElement {
     if (this.containerID) {
       return html`<qr-code data="${this.url}?c=${this.containerID}"></qr-code>`;
     }
-    return html`<p>Click on a container to view its QR code.</p>`;
+    return html`<p class="helpText">
+      Click on a container to view its QR code.
+    </p>`;
   }
 
   render() {
