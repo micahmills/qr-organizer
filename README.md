@@ -5,6 +5,11 @@
 # qr-organizer
 An home inventory system to create QR code labels and keep track of boxes and tote contents
 
+# TODOs
+- [ ] Add a way to add a new item to the inventory
+- [ ] Add a way to add a new box to the inventory
+- [ ] Print QR code labels for items
+- [ ] Search for items
 
 ## Open-wc Starter App
 
