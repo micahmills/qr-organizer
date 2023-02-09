@@ -36,7 +36,10 @@ export class ContainerContent extends LitElement {
     if (this.containerContent) {
       if (this.containerContent.length > 0) {
         return html`
-          ${map(this.containerContent, item => html`<li>${item.name}</li>`)}
+          ${map(
+            this.containerContent,
+            item => html`<li id="${item.id}">${item.name}</li>`
+          )}
         `;
       }
       return html`<li>No items in this container</li>`;

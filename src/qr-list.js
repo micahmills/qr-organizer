@@ -23,6 +23,9 @@ export class QRList extends LitElement {
     return {
       containers: { type: Array },
       url: { type: String },
+      labelWidth: { type: String },
+      labelHeight: { type: String },
+      hideName: { type: Boolean },
     };
   }
 
@@ -31,17 +34,39 @@ export class QRList extends LitElement {
       main {
         font-family: sans-serif;
         display: grid;
-        grid-gap: 10px;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 0px;
+        grid-template-columns: repeat(2, minmax(283.5pt, 0fr));
       }
       .QR_container {
-        border: 2px dotted black;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+        border: 1px solid black;
+        width: var(--label-height, 283.5pt);
+        height: var(--label-width, 141.75pt);
       }
       h1 {
-        margin: 0;
+        margin: 0px;
+        text-align: center;
+        font-size: 1.4em;
+        margin-top: 0.5em;
+        max-height: 25%;
+      }
+      h1.hide {
+        opacity: 0;
+        max-height: 5%;
+      }
+
+      qr-code::part(svg) {
+        max-height: 75%;
+        width: 100%;
+      }
+
+      @media print {
+        @page {
+          margin: 2cm;
+        }
+
+        a {
+          display: none;
+        }
       }
     `;
   }
@@ -50,6 +75,8 @@ export class QRList extends LitElement {
     super();
     this.containers = [];
     this.url = window.location.origin;
+    this.labelHeight = '283.5pt';
+    this.labelWidth = '141.75pt';
   }
 
   connectedCallback() {
@@ -88,8 +115,13 @@ export class QRList extends LitElement {
           container =>
             html`
               <div class="QR_container">
-                <h1>${container.labelName}</h1>
-                <qr-code data="${this.url}?c=${container.id}"></qr-code>
+                <h1 class="${this.hideName ? 'hide' : ''}">
+                  ${container.labelName}
+                </h1>
+                <qr-code
+                  data="${this.url}?c=${container.id}"
+                  format="svg"
+                ></qr-code>
               </div>
             `
         )}
