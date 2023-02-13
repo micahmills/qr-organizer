@@ -6,6 +6,8 @@ import { ContainerContent } from './ContainerContent.js';
 import { addItem } from './addItem.js';
 import { addContainer } from './addContainer.js';
 import { QRList } from './qr-list.js';
+import { SearchItems } from './searchItems.js';
+import { SearchResults } from './searchResults.js';
 
 customElements.define('home-inventory', HomeInventory);
 customElements.define('container-list', ContainerList);
@@ -14,3 +16,5 @@ customElements.define('add-item', addItem);
 customElements.define('add-container', addContainer);
 
 customElements.define('qr-list', QRList);
+customElements.define('search-items', SearchItems);
+customElements.define('search-results', SearchResults);

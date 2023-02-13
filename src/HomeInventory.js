@@ -11,6 +11,11 @@ import {
   query,
   where,
 } from 'firebase/firestore';
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+} from 'firebase/auth';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -26,7 +31,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const containersRef = collection(db, 'Containers');
-
+const itemsRef = collection(db, 'Items');
+// Initialize Firebase Authentication and get a reference to the service
+const auth = getAuth(app);
 export class HomeInventory extends LitElement {
   static get properties() {
     return {
@@ -36,6 +43,10 @@ export class HomeInventory extends LitElement {
       container: { type: String },
       containerContent: { type: Array },
       title: { type: String },
+      _search: { type: String },
+      searchResults: { type: Array },
+      signedIn: { type: Boolean },
+      signInError: { type: String },
     };
   }
 
@@ -67,6 +78,18 @@ export class HomeInventory extends LitElement {
 
   constructor() {
     super();
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        // const uid = user.uid;
+        this.signedIn = true;
+        // ...
+      } else {
+        this.signedIn = false;
+      }
+    });
+
     this.getURLParams();
     this.addEventListener('itemAdded', e => {
       if (this.containerID === e.detail.container) {
@@ -76,8 +99,44 @@ export class HomeInventory extends LitElement {
     this.addEventListener('containerAdded', () => {
       this._getContainers();
     });
+    this.addEventListener('search', e => {
+      this._search = e.detail.search;
+      this._getSearchResults();
+    });
+
     this.title = 'Home Inventory';
     this.url = window.location.origin;
+  }
+
+  signIn() {
+    const username = this.renderRoot?.querySelector(
+      'input[name="username"]'
+    )?.value;
+    const password = this.renderRoot?.querySelector(
+      'input[name="password"]'
+    )?.value;
+
+    signInWithEmailAndPassword(auth, username, password)
+      .then(() => {
+        this.signedIn = true;
+      })
+      .catch(error => {
+        this.renderRoot.querySelector('input[name="username"]').value = '';
+        this.renderRoot.querySelector('input[name="password"]').value = '';
+
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, errorMessage);
+        this.signedIn = false;
+        this.signInError = true;
+      });
+  }
+
+  _renderSigninError() {
+    if (this.signInError) {
+      return html`<span>Invalid Username or Password</span>`;
+    }
+    return html``;
   }
 
   async _getContainerContent() {
@@ -145,6 +204,43 @@ export class HomeInventory extends LitElement {
     this.containers = containers;
   }
 
+  async _getSearchResults() {
+    const searchResults = [];
+    const querySnapshot = await getDocs(itemsRef);
+    // eslint-disable-next-line no-shadow
+    querySnapshot.forEach(doc => {
+      // doc.data() is never undefined for query doc snapshots
+      const container = doc.data();
+      container.id = doc.id;
+      searchResults.push(container);
+    });
+
+    const filtered = searchResults.filter(
+      container =>
+        JSON.stringify(container)
+          .toLowerCase()
+          .indexOf(this._search.toLowerCase()) !== -1
+    );
+
+    for (const item of filtered) {
+      // eslint-disable-next-line no-await-in-loop
+      const containerName = await this._getContainerName(item.container);
+      item.containerName = containerName;
+    }
+
+    this.searchResults = filtered;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  async _getContainerName(containerRef) {
+    const docSnap = await getDoc(containerRef);
+    if (docSnap.exists()) {
+      const { labelName } = docSnap.data();
+      return labelName;
+    }
+    return 'Unknown';
+  }
+
   getURLParams() {
     const params = new URLSearchParams(window.location.search);
     const container = params.get('c');
@@ -167,10 +263,31 @@ export class HomeInventory extends LitElement {
   }
 
   render() {
+    if (this.signedIn === false) {
+      return html` ${this._renderSigninError()}
+        <input type="email" name="username" placeholder="Username" />
+        <input type="password" name="password" placeholder="Password" />
+        <button
+          @click=${() =>
+            this.signIn('micahmills@gmail.com', '23itfyaDESiCA-qr')}
+        >
+          Sign In
+        </button>`;
+    }
+    if (this.searchResults) {
+      return html`
+        <main>
+          <h1>${this.title}</h1>
+          <search-items></search-items>
+          <search-results .searchResults=${this.searchResults}></search-results>
+        </main>
+      `;
+    }
     return html`
       <main>
         <h1>${this.title}</h1>
         <a href="/print.html">Print Labels</a>
+        <search-items></search-items>
         ${this.containerID
           ? html`<container-content
               container=${ifDefined(JSON.stringify(this.container))}
