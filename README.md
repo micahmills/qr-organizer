@@ -9,8 +9,13 @@ An home inventory system to create QR code labels and keep track of boxes and to
 - [X] Add a way to add a new item to the inventory
 - [X] Add a way to add a new box to the inventory
 - [X] Print QR code labels for items
-- [ ] Search for items
-
+- [X] Search for items
+- [ ] Edit an items location (remove it from a container and add it to another)
+- [ ] Delete an item entirely
+- [ ] Edit a container or items name, location or description.
+- [ ] Delete a container
+- [ ] Fix the UI
+- [ ] Fix UI flash before a login
 ## Open-wc Starter App
 
 [![Built with open-wc recommendations](https://img.shields.io/badge/built%20with-open--wc-blue.svg)](https://github.com/open-wc)

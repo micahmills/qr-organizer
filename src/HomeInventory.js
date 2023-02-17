@@ -274,6 +274,11 @@ export class HomeInventory extends LitElement {
           Sign In
         </button>`;
     }
+    if (!this.signedIn) {
+      console.log('loading');
+      return html`Loading...`;
+    }
+
     if (this.searchResults) {
       return html`
         <main>

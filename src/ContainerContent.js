@@ -48,11 +48,18 @@ export class ContainerContent extends LitElement {
     return html`<li>Loading...</li>`;
   }
 
+  _renderContainerLocation() {
+    if (this.container.location) {
+      return html`<h3>Location: ${this.container.location}</h3>`;
+    }
+    return html``;
+  }
+
   render() {
     if (this.container) {
       return html`
         <h2>${ifDefined(this.container.labelName)} Content</h2>
-        <h3>Location: ${ifDefined(this.container.location)}</h3>
+        ${this._renderContainerLocation()}
         <ul>
           ${this._renderContainerContent()}
         </ul>
