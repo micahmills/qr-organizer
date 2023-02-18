@@ -1,7 +1,8 @@
 /* eslint-disable class-methods-use-this */
-import { LitElement, html, css } from 'lit';
+import { html } from 'lit';
+import { GenericCard } from './genericCard.js';
 
-export class SearchResults extends LitElement {
+export class SearchResults extends GenericCard {
   static get properties() {
     return {
       searchResults: { type: Array },
@@ -9,25 +10,19 @@ export class SearchResults extends LitElement {
   }
 
   static get styles() {
-    return css`
-      :host {
-        display: flex;
-      }
-      li {
-        list-style: none;
-        margin: 0;
-      }
-    `;
+    return [super.styles];
   }
 
   render() {
     if (this.searchResults.length === 0) {
-      return html`<ul>
-        <li>No Results Found</li>
-      </ul>`;
+      return html` <h2>${this.title}</h2>
+        <ul>
+          <li>No Results Found</li>
+        </ul>`;
     }
 
     return html`
+      <h2>${this.title}</h2>
       <ul>
         ${this.searchResults.map(
           item => html`<li>${item.name} in ${item.containerName}</li>`

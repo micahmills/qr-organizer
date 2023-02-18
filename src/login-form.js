@@ -41,6 +41,19 @@ export class login extends LitElement {
         margin: 1.5rem 0;
       }
 
+      .button {
+        background-color: var(--color-light);
+        border: none;
+        border-radius: 0.5rem;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        padding: 0.5rem;
+        font-size: 1rem;
+        color: var(--white);
+      }
+
       .errormsg {
         color: var(--color-error);
       }

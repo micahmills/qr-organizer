@@ -1,10 +1,8 @@
-import { LitElement, html, css } from 'lit';
+import { html } from 'lit';
 import { map } from 'lit/directives/map.js';
+import { GenericCard } from './genericCard.js';
 
-// import { initializeApp } from "firebase/app";
-// import { getFirestore, collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore/lite';
-
-export class ContainerList extends LitElement {
+export class ContainerList extends GenericCard {
   static get properties() {
     return {
       containers: { type: Array },
@@ -14,27 +12,14 @@ export class ContainerList extends LitElement {
   }
 
   static get styles() {
-    return css`
-      :host {
-        display: flex;
-        flex-direction: column;
-        border: 1px solid gray;
-        border-radius: 1rem;
-        padding: 1em;
-        margin: 1em 0;
-      }
-      ul {
-        list-style: none;
-        padding: 0;
-      }
-    `;
+    return [super.styles];
   }
 
   render() {
     if (this.containers) {
       if (this.listVisible) {
         return html`
-          <h2>Containers</h2>
+          <h2>${this.title}</h2>
           <ul>
             ${map(
               this.containers,
@@ -46,6 +31,7 @@ export class ContainerList extends LitElement {
           ${this.addVisible
             ? html`<add-container></add-container>`
             : html`<button
+                class="button"
                 @click=${() => {
                   this.addVisible = true;
                 }}

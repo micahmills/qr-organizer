@@ -113,15 +113,15 @@ export class HomeInventory extends LitElement {
 
   constructor() {
     super();
-    if (this.signedIn === undefined) {
-      this.signedIn = false;
-    } else {
-      this.signedIn = true;
-    }
-
+    //     if (this.signedIn === undefined) {
+    //       this.signedIn = false;
+    //     } else {
+    //       this.signedIn = true;
+    //     }
+    console.log(this.signedIn);
     this.getURLParams();
     this.addEventListener('login', e => {
-      console.log(e.detail);
+      console.log('login event', e.detail.loggedIn);
       if (e.detail.loggedIn === true) {
         this.signedIn = true;
       }
@@ -302,7 +302,10 @@ export class HomeInventory extends LitElement {
             </button>
             <search-items></search-items>
           </section>
-          <search-results .searchResults=${this.searchResults}></search-results>
+          <search-results
+            .title="Search for ${this._search}"
+            .searchResults=${this.searchResults}
+          ></search-results>
         </main>
       `;
     }
@@ -337,6 +340,7 @@ export class HomeInventory extends LitElement {
           : html`<p>Click on a container to view its contents.</p>`}
 
         <container-list
+          title="Containers"
           .containers=${this.containers}
           ?listVisible=${!this.containerID}
         ></container-list>

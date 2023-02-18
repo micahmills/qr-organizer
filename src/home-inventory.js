@@ -2,6 +2,7 @@
 import 'webcomponent-qr-code';
 import { HomeInventory } from './HomeInventory.js';
 import { LoadingSpinner } from './LoadingSpinner.js';
+import { GenericCard } from './genericCard.js';
 import { login } from './login-form.js';
 import { logoutButton } from './logout-button.js';
 import { ContainerList } from './ContainerList.js';
@@ -14,6 +15,7 @@ import { SearchResults } from './searchResults.js';
 
 customElements.define('home-inventory', HomeInventory);
 customElements.define('loading-spinner', LoadingSpinner);
+customElements.define('generic-card', GenericCard);
 customElements.define('login-form', login);
 customElements.define('logout-button', logoutButton);
 customElements.define('container-list', ContainerList);
