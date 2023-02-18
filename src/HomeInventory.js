@@ -1,9 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { LitElement, html, css } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import { initializeApp } from 'firebase/app';
 import {
-  getFirestore,
   collection,
   doc,
   getDoc,
@@ -11,29 +9,8 @@ import {
   query,
   where,
 } from 'firebase/firestore';
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-} from 'firebase/auth';
+import { db, containersRef, itemsRef } from './firebaseConfig.js';
 
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: 'AIzaSyD6xtWsMnxdZjLzlpUW1PVB3lxeDsS915E',
-  authDomain: 'qr-organizer-14e12.firebaseapp.com',
-  projectId: 'qr-organizer-14e12',
-  storageBucket: 'qr-organizer-14e12.appspot.com',
-  messagingSenderId: '737464270821',
-  appId: '1:737464270821:web:68e8ef84ea775a4e1af90c',
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const containersRef = collection(db, 'Containers');
-const itemsRef = collection(db, 'Items');
-// Initialize Firebase Authentication and get a reference to the service
-const auth = getAuth(app);
 export class HomeInventory extends LitElement {
   static get properties() {
     return {
@@ -59,15 +36,63 @@ export class HomeInventory extends LitElement {
         align-items: center;
         justify-content: flex-start;
         font-size: calc(10px + 2vmin);
-        color: #1a2b42;
+        color: var(--color-dark);
         max-width: 960px;
         margin: 0 auto;
         text-align: center;
-        background-color: var(--home-inventory-background-color);
+        background-color: var(--gray);
       }
 
       main {
         flex-grow: 1;
+      }
+
+      .header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+      }
+
+      .button {
+        background-color: var(--color-light);
+        border: none;
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        font-size: 1rem;
+        color: var(--white);
+      }
+
+      .loginForm {
+        display: flex;
+        flex-direction: column;
+        width: 50vw;
+        min-width: 20rem;
+        margin: 25vh auto;
+        background-color: var(--white);
+        border-radius: 0.5rem;
+        padding: 1rem;
+      }
+
+      .loginForm label {
+        text-align: left;
+        margin: 1rem 0.25em 0;
+      }
+
+      .loginForm input {
+        margin: 0.5rem 0px 1rem;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border: 1px solid black;
+        font-size: 1rem;
+      }
+
+      .loginForm button {
+        padding: 1rem;
+        margin: 1.5rem 0;
+      }
+
+      .errormsg {
+        color: var(--color-error);
       }
 
       .helpText {
@@ -78,27 +103,33 @@ export class HomeInventory extends LitElement {
 
   constructor() {
     super();
-    onAuthStateChanged(auth, user => {
-      if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
-        // const uid = user.uid;
+    if (this.signedIn === undefined) {
+      this.signedIn = false;
+    } else {
+      this.signedIn = true;
+    }
+
+    this.getURLParams();
+    this.addEventListener('login', e => {
+      console.log(e.detail);
+      if (e.detail.loggedIn === true) {
         this.signedIn = true;
-        // ...
-      } else {
+      }
+      if (e.detail.loggedIn === false) {
         this.signedIn = false;
       }
     });
 
-    this.getURLParams();
     this.addEventListener('itemAdded', e => {
       if (this.containerID === e.detail.container) {
         this._getContainerContent();
       }
     });
+
     this.addEventListener('containerAdded', () => {
       this._getContainers();
     });
+
     this.addEventListener('search', e => {
       this._search = e.detail.search;
       this._getSearchResults();
@@ -106,37 +137,6 @@ export class HomeInventory extends LitElement {
 
     this.title = 'Home Inventory';
     this.url = window.location.origin;
-  }
-
-  signIn() {
-    const username = this.renderRoot?.querySelector(
-      'input[name="username"]'
-    )?.value;
-    const password = this.renderRoot?.querySelector(
-      'input[name="password"]'
-    )?.value;
-
-    signInWithEmailAndPassword(auth, username, password)
-      .then(() => {
-        this.signedIn = true;
-      })
-      .catch(error => {
-        this.renderRoot.querySelector('input[name="username"]').value = '';
-        this.renderRoot.querySelector('input[name="password"]').value = '';
-
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-        this.signedIn = false;
-        this.signInError = true;
-      });
-  }
-
-  _renderSigninError() {
-    if (this.signInError) {
-      return html`<span>Invalid Username or Password</span>`;
-    }
-    return html``;
   }
 
   async _getContainerContent() {
@@ -231,6 +231,10 @@ export class HomeInventory extends LitElement {
     this.searchResults = filtered;
   }
 
+  _clearSearchResults() {
+    this.searchResults = '';
+  }
+
   // eslint-disable-next-line class-methods-use-this
   async _getContainerName(containerRef) {
     const docSnap = await getDoc(containerRef);
@@ -264,18 +268,9 @@ export class HomeInventory extends LitElement {
 
   render() {
     if (this.signedIn === false) {
-      return html` ${this._renderSigninError()}
-        <input type="email" name="username" placeholder="Username" />
-        <input type="password" name="password" placeholder="Password" />
-        <button
-          @click=${() =>
-            this.signIn('micahmills@gmail.com', '23itfyaDESiCA-qr')}
-        >
-          Sign In
-        </button>`;
+      return html`<login-form></login-form>`;
     }
     if (!this.signedIn) {
-      console.log('loading');
       return html`Loading...`;
     }
 
@@ -283,7 +278,25 @@ export class HomeInventory extends LitElement {
       return html`
         <main>
           <h1>${this.title}</h1>
-          <search-items></search-items>
+          <logout-button signedIn></logout-button>
+          <section class="header">
+            <button @click=${this._clearSearchResults} class="button">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-arrow-left-short"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"
+                />
+              </svg>
+            </button>
+            <search-items></search-items>
+          </section>
           <search-results .searchResults=${this.searchResults}></search-results>
         </main>
       `;
@@ -291,8 +304,25 @@ export class HomeInventory extends LitElement {
     return html`
       <main>
         <h1>${this.title}</h1>
-        <a href="/print.html">Print Labels</a>
-        <search-items></search-items>
+        <logout-button signedIn></logout-button>
+        <section class="header">
+          <a href="/print.html" class="button">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-printer"
+              viewBox="0 0 16 16"
+            >
+              <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z" />
+              <path
+                d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"
+              />
+            </svg>
+          </a>
+          <search-items></search-items>
+        </section>
         ${this.containerID
           ? html`<container-content
               container=${ifDefined(JSON.stringify(this.container))}

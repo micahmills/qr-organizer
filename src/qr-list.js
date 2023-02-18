@@ -2,16 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { map } from 'lit/directives/map.js';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
-
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: 'AIzaSyD6xtWsMnxdZjLzlpUW1PVB3lxeDsS915E',
-  authDomain: 'qr-organizer-14e12.firebaseapp.com',
-  projectId: 'qr-organizer-14e12',
-  storageBucket: 'qr-organizer-14e12.appspot.com',
-  messagingSenderId: '737464270821',
-  appId: '1:737464270821:web:68e8ef84ea775a4e1af90c',
-};
+import { firebaseConfig } from './firebaseConfig.js';
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
