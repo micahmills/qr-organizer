@@ -1,13 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { map } from 'lit/directives/map.js';
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
-import { firebaseConfig } from './firebaseConfig.js';
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const containersRef = collection(db, 'Containers');
+import { getDocs } from 'firebase/firestore';
+import { containersRef } from './firebaseConfig.js';
 
 export class QRList extends LitElement {
   static get properties() {
