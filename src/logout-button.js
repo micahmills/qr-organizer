@@ -60,7 +60,6 @@ export class logoutButton extends LitElement {
   }
 
   render() {
-    console.log(this.signedIn);
     if (this.signedIn) {
       return html`
         <button @click=${this._signOut} class="button">

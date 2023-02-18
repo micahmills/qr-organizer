@@ -112,6 +112,9 @@ export class login extends LitElement {
   }
 
   render() {
+    if (this.signedIn === undefined) {
+      return html`<loading-spinner></loading-spinner></loading-spinner>`;
+    }
     return html` <form class="loginForm" @submit=${e => e.preventDefault()}>
       ${this._renderSigninError()}
       <label for="username">Username</label>

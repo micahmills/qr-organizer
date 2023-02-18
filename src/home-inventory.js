@@ -1,6 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import 'webcomponent-qr-code';
 import { HomeInventory } from './HomeInventory.js';
+import { LoadingSpinner } from './LoadingSpinner.js';
 import { login } from './login-form.js';
 import { logoutButton } from './logout-button.js';
 import { ContainerList } from './ContainerList.js';
@@ -12,6 +13,7 @@ import { SearchItems } from './searchItems.js';
 import { SearchResults } from './searchResults.js';
 
 customElements.define('home-inventory', HomeInventory);
+customElements.define('loading-spinner', LoadingSpinner);
 customElements.define('login-form', login);
 customElements.define('logout-button', logoutButton);
 customElements.define('container-list', ContainerList);

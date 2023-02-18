@@ -62,6 +62,6 @@ export class ContainerList extends LitElement {
         Show Containers
       </button>`;
     }
-    return html`<h2>Loading...</h2>`;
+    return html`<loading-spinner></loading-spinner>`;
   }
 }

@@ -45,7 +45,7 @@ export class ContainerContent extends LitElement {
       return html`<li>No items in this container</li>`;
     }
 
-    return html`<li>Loading...</li>`;
+    return html`<loading-spinner></loading-spinner>`;
   }
 
   _renderContainerLocation() {
@@ -66,6 +66,6 @@ export class ContainerContent extends LitElement {
         <add-item containerID=${this.containerID}></add-item>
       `;
     }
-    return html`<h2>Loading...</h2>`;
+    return html`<loading-spinner></loading-spinner>>`;
   }
 }

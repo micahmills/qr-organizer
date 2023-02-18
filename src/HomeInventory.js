@@ -277,11 +277,8 @@ export class HomeInventory extends LitElement {
   }
 
   render() {
-    if (this.signedIn === false) {
+    if (this.signedIn === false || this.signedIn === undefined) {
       return html`<login-form></login-form>`;
-    }
-    if (!this.signedIn) {
-      return html`Loading...`;
     }
 
     if (this.searchResults) {
