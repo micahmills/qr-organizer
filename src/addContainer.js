@@ -32,9 +32,32 @@ export class addContainer extends LitElement {
         font-size: 1.25rem;
       }
 
-      button {
+      /* button {
         margin: 1em;
         padding: 1.25em;
+      } */
+
+      .button {
+        background-color: var(--color-light);
+        border: none;
+        border-radius: 0.5rem;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        padding: 0.5rem;
+        font-size: 1rem;
+        color: var(--white);
+        margin: 1em;
+      }
+
+      input {
+        background-color: var(--white);
+        border: 1px solid var(--color-dark);
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        line-height: 1.5rem;
+        font-size: 1.15em;
       }
     `;
   }
@@ -79,8 +102,12 @@ export class addContainer extends LitElement {
       <input type="text" name="name" @input=${this._inputChanged} />
       <label for="location">Location</label>
       <input type="text" name="location" />
-      <button ?disabled=${!this._submitEnabled} @click=${this._submitUpdate}>
-        Add
+      <button
+        class="button"
+        ?disabled=${!this._submitEnabled}
+        @click=${this._submitUpdate}
+      >
+        Add Container
       </button>
     `;
   }

@@ -8,7 +8,6 @@ export class GenericCard extends LitElement {
   }
 
   static get styles() {
-    console.log('GenericCard styles');
     return css`
       :host {
         display: flex;
@@ -23,6 +22,10 @@ export class GenericCard extends LitElement {
       h2 {
         margin: 0;
       }
+      ul {
+        list-style: none;
+        padding: 0;
+      }
       li {
         list-style: none;
         margin: 0;
@@ -36,7 +39,19 @@ export class GenericCard extends LitElement {
           0.3s box-shadow,
           0.3s -webkit-transform cubic-bezier(0.155, 1.105, 0.295, 1.12);
         padding: 14px 80px 18px 36px;
-        cursor: pointer;
+      }
+
+      .button {
+        background-color: var(--color-light);
+        border: none;
+        border-radius: 0.5rem;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        padding: 0.5rem;
+        font-size: 1rem;
+        color: var(--white);
       }
     `;
   }

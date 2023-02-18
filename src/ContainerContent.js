@@ -1,8 +1,9 @@
-import { LitElement, html, css } from 'lit';
+import { html } from 'lit';
 import { map } from 'lit/directives/map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import { GenericCard } from './genericCard.js';
 
-export class ContainerContent extends LitElement {
+export class ContainerContent extends GenericCard {
   static get properties() {
     return {
       container: { type: Object },
@@ -12,24 +13,7 @@ export class ContainerContent extends LitElement {
   }
 
   static get styles() {
-    return css`
-      :host {
-        display: flex;
-        flex-direction: column;
-        border: 1px solid gray;
-        border-radius: 1rem;
-        padding: 1em;
-      }
-
-      h2,
-      h3 {
-        margin: 0.5rem 0;
-      }
-
-      ul {
-        list-style: none;
-      }
-    `;
+    return [super.styles];
   }
 
   _renderContainerContent() {
@@ -66,6 +50,6 @@ export class ContainerContent extends LitElement {
         <add-item containerID=${this.containerID}></add-item>
       `;
     }
-    return html`<loading-spinner></loading-spinner>>`;
+    return html`<loading-spinner></loading-spinner>`;
   }
 }

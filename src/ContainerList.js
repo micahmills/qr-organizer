@@ -41,6 +41,7 @@ export class ContainerList extends GenericCard {
         `;
       }
       return html`<button
+        class="button"
         @click=${() => {
           this.listVisible = true;
         }}

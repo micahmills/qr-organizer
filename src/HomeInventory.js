@@ -37,7 +37,7 @@ export class HomeInventory extends LitElement {
         justify-content: flex-start;
         font-size: calc(10px + 2vmin);
         color: var(--color-dark);
-        max-width: 960px;
+        max-width: 90vw;
         margin: 0 auto;
         text-align: center;
         background-color: var(--gray);
@@ -45,6 +45,7 @@ export class HomeInventory extends LitElement {
 
       main {
         flex-grow: 1;
+        width: 100%;
       }
 
       .header {

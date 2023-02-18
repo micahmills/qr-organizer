@@ -23,6 +23,31 @@ export class addItem extends LitElement {
     return css`
       :host {
         font-family: sans-serif;
+        display: flex;
+        justify-content: center;
+      }
+
+      .button {
+        background-color: var(--color-light);
+        border: none;
+        border-radius: 0.5rem;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        padding: 0.5rem;
+        font-size: 1rem;
+        color: var(--white);
+      }
+
+      input {
+        background-color: var(--white);
+        border: 1px solid var(--color-dark);
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        line-height: 1.5rem;
+        font-size: 1.15em;
+        margin-inline-end: 1rem;
       }
     `;
   }
@@ -61,6 +86,7 @@ export class addItem extends LitElement {
   render() {
     if (!this.addVisible) {
       return html`<button
+        class="button"
         @click=${() => {
           this.addVisible = true;
         }}
@@ -68,13 +94,17 @@ export class addItem extends LitElement {
         Add Items
       </button>`;
     }
-    return html` <label
-        >New Item Name:
+    return html` <label>
+        New Item Name:
         <input name="name" @input=${this._inputChanged} />
         <input name="containerID" .value=${this.containerID} hidden />
       </label>
-      <button @click=${this._submitUpdate} .disabled=${!this._submitEnabled}>
-        Submit
+      <button
+        class="button"
+        @click=${this._submitUpdate}
+        .disabled=${!this._submitEnabled}
+      >
+        Add Item
       </button>`;
   }
 }
