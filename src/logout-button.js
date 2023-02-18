@@ -14,6 +14,10 @@ export class logoutButton extends LitElement {
         background-color: var(--color-light);
         border: none;
         border-radius: 0.5rem;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
         padding: 0.5rem;
         font-size: 1rem;
         color: var(--white);
@@ -21,8 +25,10 @@ export class logoutButton extends LitElement {
         top: 0.5rem;
         right: 0.5rem;
       }
-      svg {
+      .button svg {
         fill: var(--white);
+        width: 1.5rem;
+        height: 1.5rem;
       }
     `;
   }

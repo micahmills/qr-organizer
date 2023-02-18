@@ -43,7 +43,7 @@ export class SearchItems extends LitElement {
         border-radius: 0 0.5rem 0.5rem 0;
         border-inline-start: 1px solid var(--gray-dark);
         outline: 0;
-        height: 100%;
+        height: 1.5rem;
         min-width: 2rem;
     `;
   }

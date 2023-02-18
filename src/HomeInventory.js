@@ -57,9 +57,19 @@ export class HomeInventory extends LitElement {
         background-color: var(--color-light);
         border: none;
         border-radius: 0.5rem;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
         padding: 0.5rem;
         font-size: 1rem;
         color: var(--white);
+      }
+
+      .button svg {
+        fill: var(--white);
+        width: 1.5rem;
+        height: 1.5rem;
       }
 
       .loginForm {
@@ -283,8 +293,6 @@ export class HomeInventory extends LitElement {
             <button @click=${this._clearSearchResults} class="button">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
                 fill="currentColor"
                 class="bi bi-arrow-left-short"
                 viewBox="0 0 16 16"
