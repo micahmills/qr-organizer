@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { map } from 'lit/directives/map.js';
+import { classMap } from 'lit/directives/class-map.js';
 import { getDocs } from 'firebase/firestore';
 import { containersRef } from './firebaseConfig.js';
 
@@ -11,6 +12,7 @@ export class QRList extends LitElement {
       labelWidth: { type: String },
       labelHeight: { type: String },
       hideName: { type: Boolean },
+      hiddenLabels: { type: Array },
     };
   }
 
@@ -26,6 +28,7 @@ export class QRList extends LitElement {
         border: 1px solid black;
         width: var(--label-height, 283.5pt);
         height: var(--label-width, 141.75pt);
+        position: relative;
       }
       h1 {
         margin: 0px;
@@ -35,13 +38,33 @@ export class QRList extends LitElement {
         max-height: 25%;
       }
       h1.hide {
-        opacity: 0;
+        opacity: 0.25;
         max-height: 5%;
+      }
+      label.hide_checkbox {
+        position: absolute;
+        bottom: 1em;
+        left: 1em;
+      }
+
+      .hide {
+        opacity: 0.25;
       }
 
       qr-code::part(svg) {
         max-height: 75%;
         width: 100%;
+      }
+
+      .button {
+        background-color: var(--color-light);
+        border: none;
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        font-size: 1rem;
+        color: var(--white);
+        margin: 1em;
+        display: inline-block;
       }
 
       @media print {
@@ -52,6 +75,13 @@ export class QRList extends LitElement {
         a {
           display: none;
         }
+        .hide {
+          opacity: 0 !important;
+          display: none;
+        }
+        input[type='checkbox'] {
+          display: none;
+        }
       }
     `;
   }
@@ -59,6 +89,7 @@ export class QRList extends LitElement {
   constructor() {
     super();
     this.containers = [];
+    this.hiddenLabels = [];
     this.url = window.location.origin;
     this.labelHeight = '283.5pt';
     this.labelWidth = '141.75pt';
@@ -91,25 +122,57 @@ export class QRList extends LitElement {
     this.containers = sorted;
   }
 
+  _hideLabel(e) {
+    if (e.target.checked) {
+      this.hiddenLabels = [...this.hiddenLabels, e.target.id];
+    } else {
+      const index = this.hiddenLabels.indexOf(e.target.id);
+      if (index > -1) {
+        this.hiddenLabels.splice(index, 1);
+      }
+    }
+    this.requestUpdate();
+  }
+
   render() {
     return html`
-      <a href="/">Home</a>
+      <a href="/" class="button">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-house-door"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146ZM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4H2.5Z"
+          />
+        </svg>
+      </a>
       <main>
-        ${map(
-          this.containers,
-          container =>
-            html`
-              <div class="QR_container">
-                <h1 class="${this.hideName ? 'hide' : ''}">
-                  ${container.labelName}
-                </h1>
-                <qr-code
-                  data="${this.url}?c=${container.id}"
-                  format="svg"
-                ></qr-code>
-              </div>
-            `
-        )}
+        ${map(this.containers, container => {
+          const hidden = this.hiddenLabels.includes(container.id);
+          const classes = { hide: hidden, QR_container: true };
+          return html`
+            <div class=${classMap(classes)}>
+              <h1 class="${this.hideName ? 'hide' : ''}">
+                ${container.labelName}
+              </h1>
+              <label class="hide_checkbox" for=${container.id}
+                >${hidden ? 'Show' : 'Hide'}
+                <input
+                  type="checkbox"
+                  @click=${this._hideLabel}
+                  id=${container.id}
+              /></label>
+              <qr-code
+                data="${this.url}?c=${container.id}"
+                format="svg"
+              ></qr-code>
+            </div>
+          `;
+        })}
       </main>
     `;
   }
