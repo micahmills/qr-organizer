@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection } from 'firebase/firestore';
+import { getFirestore, collection, doc, deleteDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
@@ -17,4 +17,13 @@ const containersRef = collection(db, 'Containers');
 const itemsRef = collection(db, 'Items');
 const auth = getAuth(app);
 
-export { firebaseConfig, app, db, containersRef, itemsRef, auth };
+export {
+  firebaseConfig,
+  app,
+  db,
+  containersRef,
+  itemsRef,
+  auth,
+  doc,
+  deleteDoc,
+};
