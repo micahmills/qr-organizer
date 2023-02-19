@@ -75,6 +75,11 @@ export class SearchItems extends LitElement {
           @input=${e => {
             this.searchTerm = e.target.value;
           }}
+          @keydown=${e => {
+            if (e.key === 'Enter') {
+              this._search();
+            }
+          }}
         />
 
         <button @click=${() => this._search()}>

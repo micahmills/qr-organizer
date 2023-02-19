@@ -25,7 +25,11 @@ export class SearchResults extends GenericCard {
       <h2>${this.title}</h2>
       <ul>
         ${this.searchResults.map(
-          item => html`<li>${item.name} in ${item.containerName}</li>`
+          item =>
+            html`<li>
+              ${item.name} in
+              <a href="/?c=${item.container.id}">${item.containerName}</a>
+            </li>`
         )}
       </ul>
     `;
