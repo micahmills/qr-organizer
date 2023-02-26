@@ -26,9 +26,24 @@ export class QRList extends LitElement {
       }
       .QR_container {
         border: 1px solid black;
-        width: var(--label-height, 283.5pt);
-        height: var(--label-width, 141.75pt);
+        width: var(--label-height, 255pt);
+        height: var(--label-width, 153pt);
         position: relative;
+      }
+      .container {
+        display: flex;
+      }
+
+      .address {
+        padding-inline-start: 0.5em;
+        padding-block-start: 0.5em;
+        flex: 3;
+      }
+      qr-code {
+        flex: 1;
+      }
+      .add_name {
+        line-height: 1em;
       }
       h1 {
         margin: 0px;
@@ -52,7 +67,7 @@ export class QRList extends LitElement {
       }
 
       qr-code::part(svg) {
-        max-height: 75%;
+        max-height: 25%;
         width: 100%;
       }
 
@@ -82,6 +97,9 @@ export class QRList extends LitElement {
         input[type='checkbox'] {
           display: none;
         }
+        label.hide_checkbox {
+          display: none;
+        }
       }
     `;
   }
@@ -91,8 +109,8 @@ export class QRList extends LitElement {
     this.containers = [];
     this.hiddenLabels = [];
     this.url = window.location.origin;
-    this.labelHeight = '283.5pt';
-    this.labelWidth = '141.75pt';
+    this.labelHeight = '153pt';
+    this.labelWidth = '255pt';
   }
 
   connectedCallback() {
@@ -159,17 +177,29 @@ export class QRList extends LitElement {
               <h1 class="${this.hideName ? 'hide' : ''}">
                 ${container.labelName}
               </h1>
-              <label class="hide_checkbox" for=${container.id}
-                >${hidden ? 'Show' : 'Hide'}
-                <input
-                  type="checkbox"
-                  @click=${this._hideLabel}
-                  id=${container.id}
-              /></label>
-              <qr-code
-                data="${this.url}?c=${container.id}"
-                format="svg"
-              ></qr-code>
+              <h1 class="add_name">Micah & Kara Mills</h1>
+              <div class="container">
+                <div class="address">
+                  Mehmet Akif Mah., <br />
+                  Ulubatlı Hasan Cd.<br />
+                  Paradise City Çekmeköy Evleri,<br />
+                  A5 Blok D:16<br />
+                  34782 Çekmeköy/İstanbul/Türkiye<br />
+                  micahmills@gmail.com<br />
+                  Cep: +90 552 373 9025<br />
+                </div>
+                <label class="hide_checkbox" for=${container.id}
+                  >${hidden ? 'Show' : 'Hide'}
+                  <input
+                    type="checkbox"
+                    @click=${this._hideLabel}
+                    id=${container.id}
+                /></label>
+                <qr-code
+                  data="${this.url}?c=${container.id}"
+                  format="svg"
+                ></qr-code>
+              </div>
             </div>
           `;
         })}
