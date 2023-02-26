@@ -29,6 +29,7 @@ export class QRList extends LitElement {
         width: var(--label-height, 255pt);
         height: var(--label-width, 153pt);
         position: relative;
+        page-break-inside: avoid;
       }
       .container {
         display: flex;
@@ -67,7 +68,7 @@ export class QRList extends LitElement {
       }
 
       qr-code::part(svg) {
-        max-height: 25%;
+        max-height: 100%;
         width: 100%;
       }
 
