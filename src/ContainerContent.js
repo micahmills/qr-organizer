@@ -50,12 +50,14 @@ export class ContainerContent extends GenericCard {
   // eslint-disable-next-line class-methods-use-this
   async _deleteItem(id) {
     await deleteDoc(doc(db, 'Items', id));
+    this.containerContent = this.containerContent.filter(
+      item => item.id !== id
+    );
     this.requestUpdate();
   }
 
   // eslint-disable-next-line class-methods-use-this
   async _editItem(id, updatedText) {
-    console.log(`Edit Item ${id} to ${updatedText}`);
     await updateDoc(doc(db, 'Items', id), {
       name: updatedText,
     });
@@ -64,7 +66,6 @@ export class ContainerContent extends GenericCard {
 
   // eslint-disable-next-line class-methods-use-this
   _makeItemEditable(id) {
-    console.log(`Make Item ${id} Editable`);
     this.shadowRoot
       .querySelector(`#${id} .itemName`)
       .setAttribute('contentEditable', 'true');
@@ -78,7 +79,6 @@ export class ContainerContent extends GenericCard {
       clearTimeout(timeout);
 
       const updatedText = e.target.innerText;
-      console.log(updatedText);
 
       // Make a new timeout set to go off in 1000ms (1 second)
       timeout = setTimeout(() => {
