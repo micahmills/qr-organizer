@@ -38,6 +38,11 @@ export class ContainerContent extends GenericCard {
           outline: 1px solid var(--color-dark);
           outline-offset: 0.5rem;
         }
+
+        .itemName[contenteditable='true'] {
+          outline: 1px solid var(--color-dark);
+          outline-offset: 0.25rem;
+        }
       `,
     ];
   }
@@ -49,13 +54,43 @@ export class ContainerContent extends GenericCard {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  async _editItem(id) {
-    console.log(`Edit Item ${id}`);
+  async _editItem(id, updatedText) {
+    console.log(`Edit Item ${id} to ${updatedText}`);
+    await updateDoc(doc(db, 'Items', id), {
+      name: updatedText,
+    });
+    this._makeItemUnEditable(id);
   }
 
   // eslint-disable-next-line class-methods-use-this
-  async _makeItemEditable(id) {
+  _makeItemEditable(id) {
     console.log(`Make Item ${id} Editable`);
+    this.shadowRoot
+      .querySelector(`#${id} .itemName`)
+      .setAttribute('contentEditable', 'true');
+
+    let timeout = null;
+
+    this.shadowRoot.querySelector('#itemsList').addEventListener('input', e => {
+      // Clear the timeout if it has already been set.
+      // This will prevent the previous task from executing
+      // if it has been less than <MILLISECONDS>
+      clearTimeout(timeout);
+
+      const updatedText = e.target.innerText;
+      console.log(updatedText);
+
+      // Make a new timeout set to go off in 1000ms (1 second)
+      timeout = setTimeout(() => {
+        this._editItem(id, updatedText);
+      }, 1000);
+    });
+  }
+
+  _makeItemUnEditable(id) {
+    this.shadowRoot
+      .querySelector(`#${id} .itemName`)
+      .setAttribute('contentEditable', 'false');
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -124,7 +159,7 @@ export class ContainerContent extends GenericCard {
           ${map(
             this.containerContent,
             item => html`<li id="${item.id}">
-              ${item.name}
+              <span class="itemName">${item.name}</span>
               <span class="actionButtonsContainer">
                 <button
                   class="iconButton"
@@ -211,7 +246,7 @@ export class ContainerContent extends GenericCard {
             </svg>
           </button>
         </header>
-        <ul>
+        <ul id="itemsList">
           ${this._renderContainerContent()}
         </ul>
         <add-item containerID=${this.containerID}></add-item>
