@@ -79,11 +79,12 @@ export class ContainerContent extends GenericCard {
       clearTimeout(timeout);
 
       const updatedText = e.target.innerText;
-
-      // Make a new timeout set to go off in 1000ms (1 second)
-      timeout = setTimeout(() => {
-        this._editItem(id, updatedText);
-      }, 1000);
+      if (e.target.dataset.id === id) {
+        // Make a new timeout set to go off in 1000ms (1 second)
+        timeout = setTimeout(() => {
+          this._editItem(id, updatedText);
+        }, 1000);
+      }
     });
   }
 
@@ -159,7 +160,7 @@ export class ContainerContent extends GenericCard {
           ${map(
             this.containerContent,
             item => html`<li id="${item.id}">
-              <span class="itemName">${item.name}</span>
+              <span class="itemName" data-id=${item.id}>${item.name}</span>
               <span class="actionButtonsContainer">
                 <button
                   class="iconButton"
