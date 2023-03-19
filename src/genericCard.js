@@ -30,6 +30,21 @@ export class GenericCard extends LitElement {
         list-style: none;
         margin: 0;
       }
+      li a {
+        text-decoration: none;
+        line-height: 1.5em;
+        background-color: var(--color-primary);
+        border: none;
+        border-radius: 0.5rem;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        padding: 0.5rem;
+        font-size: 1.25rem;
+        color: var(--white);
+        margin: 1.5rem 0;
+      }
 
       .card {
         border-radius: 4px;
