@@ -119,10 +119,8 @@ export class HomeInventory extends LitElement {
     //     } else {
     //       this.signedIn = true;
     //     }
-    console.log(this.signedIn);
     this.getURLParams();
     this.addEventListener('login', e => {
-      console.log('login event', e.detail.loggedIn);
       if (e.detail.loggedIn === true) {
         this.signedIn = true;
       }
