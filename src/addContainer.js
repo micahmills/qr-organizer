@@ -82,6 +82,7 @@ export class addContainer extends LitElement {
     const docRef = await addDoc(containersRef, {
       labelName: name,
       location,
+      active: true,
     });
 
     const options = {

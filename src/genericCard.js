@@ -25,6 +25,7 @@ export class GenericCard extends LitElement {
       ul {
         list-style: none;
         padding: 0;
+        margin: 0;
       }
       li {
         list-style: none;
@@ -46,6 +47,19 @@ export class GenericCard extends LitElement {
         margin: 1.5rem 0;
       }
 
+      li a.empty {
+        background-color: var(--color-primary-muted);
+      }
+
+      summary {
+        cursor: pointer;
+        font-size: 1.17em;
+        margin-block-start: 0.83em;
+        margin-block-end: 0.83em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        font-weight: bold;
+      }
       .card {
         border-radius: 4px;
         background: #fff;

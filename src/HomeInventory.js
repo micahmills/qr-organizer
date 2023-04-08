@@ -5,6 +5,7 @@ import {
   collection,
   doc,
   getDoc,
+  updateDoc,
   getDocs,
   query,
   where,
@@ -180,6 +181,16 @@ export class HomeInventory extends LitElement {
       );
 
       this.containerContent = sorted;
+
+      if (this.containerContent.length === 0) {
+        await updateDoc(containerRef, {
+          empty: true,
+        });
+      } else {
+        await updateDoc(containerRef, {
+          empty: false,
+        });
+      }
     } else {
       // doc.data() will be undefined in this case
       console.log('No such document!');
