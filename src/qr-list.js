@@ -2,7 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { map } from 'lit/directives/map.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { getDocs } from 'firebase/firestore';
-import { containersRef } from './firebaseConfig.js';
+import { containersRef, infoRef } from './firebaseConfig.js';
 
 export class QRList extends LitElement {
   static get properties() {
@@ -13,6 +13,11 @@ export class QRList extends LitElement {
       labelHeight: { type: String },
       hideName: { type: Boolean },
       hiddenLabels: { type: Array },
+      labelAddress: { type: String },
+      labelCity: { type: String },
+      labelState: { type: String },
+      labelZip: { type: String },
+      labelCountry: { type: String },
     };
   }
 
@@ -39,6 +44,7 @@ export class QRList extends LitElement {
         padding-inline-start: 0.5em;
         padding-block-start: 0.5em;
         flex: 3;
+        font-size: 1.4em;
       }
       qr-code {
         flex: 1;
@@ -117,6 +123,7 @@ export class QRList extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     this._getContainers();
+    this._getAddress();
   }
 
   async _getContainers() {
@@ -139,6 +146,19 @@ export class QRList extends LitElement {
     );
 
     this.containers = sorted;
+  }
+
+  async _getAddress() {
+    const querySnapshot = await getDocs(infoRef);
+    querySnapshot.forEach(doc => {
+      if (doc.id === 'Address') {
+        this.labelAddress = doc.data().label_address;
+        this.labelCity = doc.data().label_city;
+        this.labelState = doc.data().label_state;
+        this.labelZip = doc.data().label_zip;
+        this.labelCountry = doc.data().label_country;
+      }
+    });
   }
 
   _hideLabel(e) {
@@ -181,13 +201,9 @@ export class QRList extends LitElement {
               <h1 class="add_name">Micah & Kara Mills</h1>
               <div class="container">
                 <div class="address">
-                  Mehmet Akif Mah., <br />
-                  Ulubatlı Hasan Cd.<br />
-                  Paradise City Çekmeköy Evleri,<br />
-                  A5 Blok D:16<br />
-                  34782 Çekmeköy/İstanbul/Türkiye<br />
-                  micahmills@gmail.com<br />
-                  Cep: +90 552 373 9025<br />
+                  ${this.labelAddress}</br>
+                  ${this.labelCity}, ${this.labelState} ${this.labelZip}</br>
+                  ${this.labelCountry}
                 </div>
                 <label class="hide_checkbox" for=${container.id}
                   >${hidden ? 'Show' : 'Hide'}

@@ -15,6 +15,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const containersRef = collection(db, 'Containers');
 const itemsRef = collection(db, 'Items');
+const infoRef = collection(db, 'Info');
 const auth = getAuth(app);
 
 export {
@@ -23,6 +24,7 @@ export {
   db,
   containersRef,
   itemsRef,
+  infoRef,
   auth,
   doc,
   deleteDoc,
