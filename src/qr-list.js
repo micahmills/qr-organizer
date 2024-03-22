@@ -38,6 +38,7 @@ export class QRList extends LitElement {
       }
       .container {
         display: flex;
+        height: 9.75em;
       }
 
       .address {
@@ -46,6 +47,12 @@ export class QRList extends LitElement {
         flex: 3;
         font-size: 1.4em;
       }
+
+      .streetaddress {
+        display: inline-block;
+        margin-bottom: 0.5em;
+      }
+
       qr-code {
         flex: 1;
       }
@@ -55,7 +62,7 @@ export class QRList extends LitElement {
       h1 {
         margin: 0px;
         text-align: center;
-        font-size: 1.4em;
+        font-size: 2em;
         margin-top: 0.5em;
         max-height: 25%;
       }
@@ -94,7 +101,8 @@ export class QRList extends LitElement {
           margin: 2cm;
         }
 
-        a {
+        a,
+        .button {
           display: none;
         }
         .hide {
@@ -157,6 +165,8 @@ export class QRList extends LitElement {
         this.labelState = doc.data().label_state;
         this.labelZip = doc.data().label_zip;
         this.labelCountry = doc.data().label_country;
+        this.labelEmail = doc.data().label_email;
+        this.labelPhone = doc.data().label_phone;
       }
     });
   }
@@ -201,9 +211,15 @@ export class QRList extends LitElement {
               <h1 class="add_name">Micah & Kara Mills</h1>
               <div class="container">
                 <div class="address">
-                  ${this.labelAddress}</br>
-                  ${this.labelCity}, ${this.labelState} ${this.labelZip}</br>
-                  ${this.labelCountry}
+                  <span class="streetaddress">
+                    ${this.labelAddress}</br>
+                    ${this.labelZip} ${this.labelCity}, ${this.labelState}</br>
+                    ${this.labelCountry}
+                  </span>
+                  <span class="contact">
+                    ${this.labelEmail}</br>
+                    ${this.labelPhone}
+                  </span>
                 </div>
                 <label class="hide_checkbox" for=${container.id}
                   >${hidden ? 'Show' : 'Hide'}
