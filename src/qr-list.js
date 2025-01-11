@@ -31,8 +31,8 @@ export class QRList extends LitElement {
       }
       .QR_container {
         border: 1px solid black;
-        width: var(--label-height, 255pt);
-        height: var(--label-width, 153pt);
+        width: var(--label-width, 255pt);
+        height: var(--label-height, 153pt);
         position: relative;
         page-break-inside: avoid;
       }
@@ -45,7 +45,7 @@ export class QRList extends LitElement {
         padding-inline-start: 0.5em;
         padding-block-start: 0.5em;
         flex: 3;
-        font-size: 1.4em;
+        font-size: 1.3em;
       }
 
       .streetaddress {
@@ -213,7 +213,7 @@ export class QRList extends LitElement {
                 <div class="address">
                   <span class="streetaddress">
                     ${this.labelAddress}</br>
-                    ${this.labelZip} ${this.labelCity}, ${this.labelState}</br>
+                    ${this.labelZip} ${this.labelCity}</br>
                     ${this.labelCountry}
                   </span>
                   <span class="contact">
